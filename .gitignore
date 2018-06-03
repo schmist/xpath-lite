@@ -1,0 +1,14 @@
+*.iml
+.gradle
+local.properties
+.idea/workspace.xml
+.idea/libraries
+.idea/shelf
+.idea/caches
+.idea/module
+.idea/gradle.xml
+.idea/markdown-*
+.idea/runConfigurations/*.xml
+.DS_Store
+build
+out
