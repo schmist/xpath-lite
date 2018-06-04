@@ -1,4 +1,6 @@
 # xpath-lite
+![Build Status](https://travis-ci.org/schmist/xpath-lite.svg?branch=master)
+
 The aim of this library is to provide a simple and performant but *not* feature-complete XPath implementation for the JVM written in Kotlin. It is meant to extract information from small and plain XML files.
 
 Currently supported XPath features (this list might be extended over time):
