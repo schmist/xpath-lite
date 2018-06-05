@@ -1,7 +1,6 @@
 package com.syncatec.xpathlite
 
 import com.syncatec.xpathlite.XPathLite.ResultType.*
-import org.hamcrest.CoreMatchers.instanceOf
 import org.hamcrest.CoreMatchers.nullValue
 import org.junit.Assert.assertThat
 import org.junit.Before
@@ -13,20 +12,6 @@ class XPathLiteTest {
 
     private lateinit var xPath: XPathLite
 
-    companion object {
-        private const val xml = "" +
-            "<a>" +
-            "   <b>" +
-            "       <b/>" +
-            "       <c/>" +
-            "   </b>" +
-            "   <b>" +
-            "       <c d='foo'/>" +
-            "       <d>bar</d>" +
-            "   </b>" +
-            "</a>"
-    }
-
     @Before
     fun setUp() {
         xPath = XPathLite()
@@ -34,6 +19,7 @@ class XPathLiteTest {
 
     @Test
     fun evaluatesToNode() {
+        val xml = "<a/>"
         val node = rootNode(xml)
 
         xPath.evaluateNode("/a", node)
@@ -41,28 +27,28 @@ class XPathLiteTest {
 
     @Test
     fun evaluatesToNodeList() {
-        val node = rootNode(xml)
+        val node = rootNode("<a/>")
 
         xPath.evaluateNodeList("/a", node)
     }
 
     @Test
     fun evaluatesToString() {
-        val node = rootNode(xml)
+        val node = rootNode("<a b='c'/>")
 
-        xPath.evaluateString("/a/b/c/@d", node)
+        xPath.evaluateString("/a/@b", node)
     }
 
     @Test(expected = IllegalStateException::class)
     fun throwsExceptionIfExpectedRootNodeIsNotARootNode() {
-        val node = node(xml)
+        val node = node("<a/>")
 
         xPath.evaluate("/a", node, NODE)
     }
 
     @Test
     fun returnsNullIfExpectedRootNodeNameDoesNotMatch() {
-        val node = rootNode(xml)
+        val node = rootNode("<a/>")
 
         val result = xPath.evaluate("/b", node, NODE)
 
@@ -71,7 +57,7 @@ class XPathLiteTest {
 
     @Test
     fun returnsRootElement() {
-        val node = rootNode(xml)
+        val node = rootNode("<a/>")
 
         val result = xPath.evaluate("/a", node, NODE)
 
@@ -80,7 +66,7 @@ class XPathLiteTest {
 
     @Test
     fun returnsNodeForEmptyExpression() {
-        val node = node(xml)
+        val node = node("<a/>")
 
         val result = xPath.evaluate("", node, NODE)
 
@@ -89,7 +75,7 @@ class XPathLiteTest {
 
     @Test
     fun returnsChildOfRoot() {
-        val node = rootNode(xml)
+        val node = rootNode("<a><b/></a>")
 
         val result = xPath.evaluate("/a/b", node, NODE)
 
@@ -98,7 +84,7 @@ class XPathLiteTest {
 
     @Test
     fun returnsChildOfChildOfRoot() {
-        val node = rootNode(xml)
+        val node = rootNode("<a><b><c/></b></a>")
 
         val result = xPath.evaluate("/a/b/c", node, NODE)
 
@@ -107,7 +93,7 @@ class XPathLiteTest {
 
     @Test
     fun returnsNullIfChildOfRootDoesNotExist() {
-        val node = rootNode(xml)
+        val node = rootNode("<a><b/></a>")
 
         val result = xPath.evaluate("/a/c", node, NODE)
 
@@ -116,7 +102,7 @@ class XPathLiteTest {
 
     @Test
     fun returnsChildOfNode() {
-        val node = node(xml)
+        val node = node("<a><b/></a>")
 
         val result = xPath.evaluate("b", node, NODE)
 
@@ -125,7 +111,7 @@ class XPathLiteTest {
 
     @Test
     fun returnsChildOfChildOfNode() {
-        val node = node(xml)
+        val node = node("<a><b><c/></b></a>")
 
         val result = xPath.evaluate("b/c", node, NODE)
 
@@ -134,7 +120,7 @@ class XPathLiteTest {
 
     @Test
     fun ignoresMultipleAndTrailingSlashes() {
-        val node = node(xml)
+        val node = node("<a><b><c/></b></a>")
 
         val result = xPath.evaluate("b///c/", node, NODE)
 
@@ -143,7 +129,7 @@ class XPathLiteTest {
 
     @Test
     fun returnsNullIfChildOfNodeDoesNotExist() {
-        val node = node(xml)
+        val node = node("<a><b/></a>")
 
         val result = xPath.evaluate("c", node, NODE)
 
@@ -152,24 +138,33 @@ class XPathLiteTest {
 
     @Test
     fun returnsAttributeNode() {
-        val node = rootNode(xml)
+        val node = rootNode("<a b='c'/>")
 
-        val result = xPath.evaluate("/a/b/c/@d", node, NODE)
+        val result = xPath.evaluate("/a/@b", node, NODE)
 
-        assertThat(result.toNode()?.nodeName, iz("d"))
+        assertThat(result.toNode()?.nodeName, iz("b"))
     }
 
     @Test
     fun returnsNullIfAttributeNodeDoesNotExist() {
-        val node = rootNode(xml)
+        val node = rootNode("<a/>")
 
-        val result = xPath.evaluate("/a/b/c/@e", node, NODE)
+        val result = xPath.evaluate("/a/@b", node, NODE)
 
         assertThat(result, nullValue())
     }
 
     @Test
     fun returnsNodeListForAllMatchingNodes() {
+        val xml = "" +
+            "<a>" +
+            "   <b>" +
+            "       <c/>" +
+            "   </b>" +
+            "   <b>" +
+            "       <c/>" +
+            "   </b>" +
+            "</a>"
         val node = rootNode(xml)
 
         val result = xPath.evaluate("/a/b/c", node, NODELIST)
@@ -179,29 +174,29 @@ class XPathLiteTest {
 
     @Test
     fun returnsNodeListForOnlyDirectChildren() {
-        val node = rootNode(xml)
+        val node = rootNode("<a><b><b/></b></a>")
 
         val result = xPath.evaluate("/a/b", node, NODELIST)
 
-        assertThat(result.toNodeList()?.length, iz(2))
+        assertThat(result.toNodeList()?.length, iz(1))
     }
 
     @Test
     fun returnsAttributeNodeText() {
-        val node = rootNode(xml)
+        val node = rootNode("<a b='c'/>")
 
-        val result = xPath.evaluate("/a/b/c/@d", node, STRING)
+        val result = xPath.evaluate("/a/@b", node, STRING)
 
-        assertThat(result.toString(), iz("foo"))
+        assertThat(result.toString(), iz("c"))
     }
 
     @Test
     fun returnsNodeText() {
-        val node = rootNode(xml)
+        val node = rootNode("<a>b</a>")
 
-        val result = xPath.evaluate("/a/b/d", node, STRING)
+        val result = xPath.evaluate("/a", node, STRING)
 
-        assertThat(result.toString(), iz("bar"))
+        assertThat(result.toString(), iz("b"))
     }
 
     private fun Any?.toNode(): Node? =
