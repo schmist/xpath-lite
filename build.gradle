@@ -13,6 +13,7 @@ group 'com.syncatec'
 version '0.1.0'
 
 apply plugin: 'kotlin'
+apply plugin: 'maven-publish'
 
 repositories {
     mavenCentral()
@@ -29,4 +30,24 @@ compileKotlin {
 }
 compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
+}
+
+publishing {
+    publications {
+        java(MavenPublication) {
+            from project.components.java
+            groupId = 'ch.ergon.mws'
+            artifactId = 'xpath-lite'
+            version = "$version-${rootProject.hasProperty('techVersion') ? rootProject.getProperty('techVersion') : 'devel'}"
+        }
+    }
+    repositories {
+        maven {
+            credentials {
+                username 'deployment'
+                password rootProject.hasProperty('publishPassword') ? rootProject.getProperty('publishPassword') : ''
+            }
+            url 'http://coop-mws-nexus.ergon.ch/repository/releases/'
+        }
+    }
 }
