@@ -3,6 +3,7 @@ package com.syncatec.xpathlite
 import com.syncatec.xpathlite.XPathLite.ResultType.*
 import org.w3c.dom.Node
 import org.w3c.dom.Node.*
+import org.w3c.dom.NodeList
 
 class XPathLite {
 
@@ -11,6 +12,15 @@ class XPathLite {
         NODELIST,
         STRING
     }
+
+    fun evaluateNode(expression: String, node: Node): Node =
+        evaluate(expression, node, NODE) as Node
+
+    fun evaluateNodeList(expression: String, node: Node): NodeList =
+        evaluate(expression, node, NODELIST) as NodeList
+
+    fun evaluateString(expression: String, node: Node): String =
+        evaluate(expression, node, STRING) as String
 
     fun evaluate(expression: String, node: Node, resultType: ResultType): Any? {
         val nodes = when {

@@ -1,6 +1,7 @@
 package com.syncatec.xpathlite
 
 import com.syncatec.xpathlite.XPathLite.ResultType.*
+import org.hamcrest.CoreMatchers.instanceOf
 import org.hamcrest.CoreMatchers.nullValue
 import org.junit.Assert.assertThat
 import org.junit.Before
@@ -29,6 +30,27 @@ class XPathLiteTest {
     @Before
     fun setUp() {
         xPath = XPathLite()
+    }
+
+    @Test
+    fun evaluatesToNode() {
+        val node = rootNode(xml)
+
+        xPath.evaluateNode("/a", node)
+    }
+
+    @Test
+    fun evaluatesToNodeList() {
+        val node = rootNode(xml)
+
+        xPath.evaluateNodeList("/a", node)
+    }
+
+    @Test
+    fun evaluatesToString() {
+        val node = rootNode(xml)
+
+        xPath.evaluateString("/a/b/c/@d", node)
     }
 
     @Test(expected = IllegalStateException::class)
