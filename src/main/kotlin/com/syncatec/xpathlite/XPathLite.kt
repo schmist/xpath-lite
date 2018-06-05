@@ -36,7 +36,7 @@ class XPathLite {
 
     private fun evaluateRootNode(segments: List<String>, node: Node): List<Node> {
         if (node.nodeType != DOCUMENT_NODE) {
-            throw IllegalStateException("Node ${node.nodeName} is not a document node.")
+            throw IllegalStateException("Node ${node.nodeName} is not a root node.")
         }
         val rootNode = node.toDocument().documentElement
         val segment = segments.first()
