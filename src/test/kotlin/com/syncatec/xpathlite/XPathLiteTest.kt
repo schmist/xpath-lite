@@ -169,7 +169,7 @@ class XPathLiteTest {
 
         val result = xPath.evaluate("/a/b/c", node, NODELIST)
 
-        assertThat(result.toNodeList()?.length, iz(2))
+        assertThat(result.toNodeList().length, iz(2))
     }
 
     @Test
@@ -178,7 +178,16 @@ class XPathLiteTest {
 
         val result = xPath.evaluate("/a/b", node, NODELIST)
 
-        assertThat(result.toNodeList()?.length, iz(1))
+        assertThat(result.toNodeList().length, iz(1))
+    }
+
+    @Test
+    fun returnsEmptyNodeListIfNoMatchingNodesExist() {
+        val node = rootNode("<a/>")
+
+        val result = xPath.evaluate("/b", node, NODELIST)
+
+        assertThat(result.toNodeList().length, iz(0))
     }
 
     @Test
@@ -202,8 +211,8 @@ class XPathLiteTest {
     private fun Any?.toNode(): Node? =
         this as? Node
 
-    private fun Any?.toNodeList(): NodeList? =
-        this as? NodeList
+    private fun Any?.toNodeList(): NodeList =
+        this as NodeList
 
     private fun Any?.toString(): String? =
         this as? String
