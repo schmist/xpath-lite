@@ -13,14 +13,14 @@ class XPathLite {
         STRING
     }
 
-    fun evaluateNode(expression: String, node: Node): Node =
-        evaluate(expression, node, NODE) as Node
+    fun evaluateNode(expression: String, node: Node): Node? =
+        evaluate(expression, node, NODE) as? Node
 
-    fun evaluateNodeList(expression: String, node: Node): NodeList =
-        evaluate(expression, node, NODELIST) as NodeList
+    fun evaluateNodeList(expression: String, node: Node): NodeList? =
+        evaluate(expression, node, NODELIST) as? NodeList
 
-    fun evaluateString(expression: String, node: Node): String =
-        evaluate(expression, node, STRING) as String
+    fun evaluateString(expression: String, node: Node): String? =
+        evaluate(expression, node, STRING) as? String
 
     fun evaluate(expression: String, node: Node, resultType: ResultType): Any? {
         val nodes = when {
