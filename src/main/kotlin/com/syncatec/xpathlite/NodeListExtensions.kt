@@ -3,5 +3,5 @@ package com.syncatec.xpathlite
 import org.w3c.dom.Node
 import org.w3c.dom.NodeList
 
-fun NodeList.asList(): List<Node> =
+internal fun NodeList.asList(): List<Node> =
     (0 until length).map { item(it) }

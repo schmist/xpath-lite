@@ -3,7 +3,7 @@ package com.syncatec.xpathlite
 import org.w3c.dom.Node
 import org.w3c.dom.NodeList
 
-fun List<Node>.toNodeList() =
+internal fun List<Node>.toNodeList() =
     object : NodeList {
         override fun item(index: Int): Node =
             this@toNodeList[index]
