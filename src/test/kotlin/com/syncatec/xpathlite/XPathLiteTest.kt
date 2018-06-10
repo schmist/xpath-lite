@@ -209,11 +209,11 @@ class XPathLiteTest {
     }
 
     private fun Any?.toNode(): Node? =
-        this as? Node
+        this as Node?
 
     private fun Any?.toNodeList(): NodeList =
         this as NodeList
 
     private fun Any?.toString(): String? =
-        this as? String
+        this as String?
 }
