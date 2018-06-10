@@ -1,6 +1,7 @@
 package com.syncatec.xpathlite
 
 import com.syncatec.xpathlite.XPathLite.ResultType.*
+import org.hamcrest.CoreMatchers.instanceOf
 import org.hamcrest.CoreMatchers.nullValue
 import org.junit.Assert.assertThat
 import org.junit.Before
@@ -206,6 +207,24 @@ class XPathLiteTest {
         val result = xPath.evaluate("/a", node, STRING)
 
         assertThat(result.toString(), iz("b"))
+    }
+
+    @Test
+    fun evaluateNodeListReturnsNodeList() {
+        val node = rootNode("<a><b/><b/></a>")
+
+        val result = xPath.evaluateNodeList("/a/b", node)
+
+        assertThat(result, instanceOf(NodeList::class.java))
+    }
+
+    @Test
+    fun evaluateStringReturnsString() {
+        val node = rootNode("<a>foo</a>")
+
+        val result = xPath.evaluateString("/a", node)
+
+        assertThat(result, instanceOf(String::class.java))
     }
 
     private fun Any?.toNode(): Node? =
