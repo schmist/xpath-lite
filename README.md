@@ -13,7 +13,7 @@ Usage:
 val documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder()
 val doc = documentBuilder.parse(File("file.xml"))
 val xPath = XPathLite()
-val result = xPath.evaluate("/a/b/c", doc, NODELIST) as NodeList
+val result = xPath.evaluateNodeList("/a/b/c", doc)
 ```
 
 The available evaluation return types are as follow:
